@@ -1,0 +1,449 @@
+{
+  "selecciones": [
+    "Argentina",
+    "España",
+    "Brasil",
+    "Francia",
+    "Alemania",
+    "Inglaterra",
+    "Portugal",
+    "Uruguay",
+    "Colombia",
+    "México",
+    "Estados Unidos",
+    "Canadá",
+    "Japón",
+    "Corea del Sur",
+    "Marruecos",
+    "Senegal",
+    "Países Bajos",
+    "Bélgica",
+    "Croacia",
+    "Italia",
+    "Suiza",
+    "Dinamarca",
+    "Polonia",
+    "Serbia",
+    "Chile",
+    "Ecuador",
+    "Perú",
+    "Costa Rica",
+    "Australia",
+    "Ghana",
+    "Nigeria",
+    "Camerún"
+  ],
+  "partidos": [
+    {
+      "id": 1,
+      "fase": "Grupos",
+      "fecha": "2026-06-11T12:00:00",
+      "equipoLocal": "Argentina",
+      "equipoVisitante": "España",
+      "resultadoReal": {
+        "local": 0,
+        "visitante": 0
+      }
+    },
+    {
+      "id": 2,
+      "fase": "Grupos",
+      "fecha": "2026-06-12T14:00:00",
+      "equipoLocal": "Brasil",
+      "equipoVisitante": "Francia",
+      "resultadoReal": {
+        "local": 1,
+        "visitante": 1
+      }
+    },
+    {
+      "id": 3,
+      "fase": "Grupos",
+      "fecha": "2026-06-13T16:00:00",
+      "equipoLocal": "Argentina",
+      "equipoVisitante": "Brasil",
+      "resultadoReal": {
+        "local": 2,
+        "visitante": 2
+      }
+    },
+    {
+      "id": 4,
+      "fase": "Grupos",
+      "fecha": "2026-06-14T18:00:00",
+      "equipoLocal": "España",
+      "equipoVisitante": "Francia",
+      "resultadoReal": {
+        "local": 0,
+        "visitante": 0
+      }
+    },
+    {
+      "id": 5,
+      "fase": "Grupos",
+      "fecha": "2026-06-15T12:00:00",
+      "equipoLocal": "Argentina",
+      "equipoVisitante": "Francia",
+      "resultadoReal": {
+        "local": 1,
+        "visitante": 1
+      }
+    },
+    {
+      "id": 6,
+      "fase": "Grupos",
+      "fecha": "2026-06-16T14:00:00",
+      "equipoLocal": "España",
+      "equipoVisitante": "Brasil",
+      "resultadoReal": {
+        "local": 2,
+        "visitante": 2
+      }
+    },
+    {
+      "id": 7,
+      "fase": "Grupos",
+      "fecha": "2026-06-12T12:00:00",
+      "equipoLocal": "Alemania",
+      "equipoVisitante": "Inglaterra",
+      "resultadoReal": {
+        "local": 0,
+        "visitante": 1
+      }
+    },
+    {
+      "id": 8,
+      "fase": "Grupos",
+      "fecha": "2026-06-13T14:00:00",
+      "equipoLocal": "Portugal",
+      "equipoVisitante": "Uruguay",
+      "resultadoReal": {
+        "local": 1,
+        "visitante": 2
+      }
+    },
+    {
+      "id": 9,
+      "fase": "Grupos",
+      "fecha": "2026-06-14T16:00:00",
+      "equipoLocal": "Alemania",
+      "equipoVisitante": "Portugal",
+      "resultadoReal": {
+        "local": 2,
+        "visitante": 0
+      }
+    },
+    {
+      "id": 10,
+      "fase": "Grupos",
+      "fecha": "2026-06-15T18:00:00",
+      "equipoLocal": "Inglaterra",
+      "equipoVisitante": "Uruguay",
+      "resultadoReal": null
+    },
+    {
+      "id": 11,
+      "fase": "Grupos",
+      "fecha": "2026-06-16T12:00:00",
+      "equipoLocal": "Alemania",
+      "equipoVisitante": "Uruguay",
+      "resultadoReal": null
+    },
+    {
+      "id": 12,
+      "fase": "Grupos",
+      "fecha": "2026-06-17T14:00:00",
+      "equipoLocal": "Inglaterra",
+      "equipoVisitante": "Portugal",
+      "resultadoReal": null
+    },
+    {
+      "id": 13,
+      "fase": "Grupos",
+      "fecha": "2026-06-13T12:00:00",
+      "equipoLocal": "Colombia",
+      "equipoVisitante": "México",
+      "resultadoReal": null
+    },
+    {
+      "id": 14,
+      "fase": "Grupos",
+      "fecha": "2026-06-14T14:00:00",
+      "equipoLocal": "Estados Unidos",
+      "equipoVisitante": "Canadá",
+      "resultadoReal": null
+    },
+    {
+      "id": 15,
+      "fase": "Grupos",
+      "fecha": "2026-06-15T16:00:00",
+      "equipoLocal": "Colombia",
+      "equipoVisitante": "Estados Unidos",
+      "resultadoReal": null
+    },
+    {
+      "id": 16,
+      "fase": "Grupos",
+      "fecha": "2026-06-16T18:00:00",
+      "equipoLocal": "México",
+      "equipoVisitante": "Canadá",
+      "resultadoReal": null
+    },
+    {
+      "id": 17,
+      "fase": "Grupos",
+      "fecha": "2026-06-17T12:00:00",
+      "equipoLocal": "Colombia",
+      "equipoVisitante": "Canadá",
+      "resultadoReal": null
+    },
+    {
+      "id": 18,
+      "fase": "Grupos",
+      "fecha": "2026-06-18T14:00:00",
+      "equipoLocal": "México",
+      "equipoVisitante": "Estados Unidos",
+      "resultadoReal": null
+    },
+    {
+      "id": 19,
+      "fase": "Grupos",
+      "fecha": "2026-06-14T12:00:00",
+      "equipoLocal": "Japón",
+      "equipoVisitante": "Corea del Sur",
+      "resultadoReal": null
+    },
+    {
+      "id": 20,
+      "fase": "Grupos",
+      "fecha": "2026-06-15T14:00:00",
+      "equipoLocal": "Marruecos",
+      "equipoVisitante": "Senegal",
+      "resultadoReal": null
+    },
+    {
+      "id": 21,
+      "fase": "Grupos",
+      "fecha": "2026-06-16T16:00:00",
+      "equipoLocal": "Japón",
+      "equipoVisitante": "Marruecos",
+      "resultadoReal": null
+    },
+    {
+      "id": 22,
+      "fase": "Grupos",
+      "fecha": "2026-06-17T18:00:00",
+      "equipoLocal": "Corea del Sur",
+      "equipoVisitante": "Senegal",
+      "resultadoReal": null
+    },
+    {
+      "id": 23,
+      "fase": "Grupos",
+      "fecha": "2026-06-18T12:00:00",
+      "equipoLocal": "Japón",
+      "equipoVisitante": "Senegal",
+      "resultadoReal": null
+    },
+    {
+      "id": 24,
+      "fase": "Grupos",
+      "fecha": "2026-06-19T14:00:00",
+      "equipoLocal": "Corea del Sur",
+      "equipoVisitante": "Marruecos",
+      "resultadoReal": null
+    },
+    {
+      "id": 25,
+      "fase": "Grupos",
+      "fecha": "2026-06-15T12:00:00",
+      "equipoLocal": "Países Bajos",
+      "equipoVisitante": "Bélgica",
+      "resultadoReal": null
+    },
+    {
+      "id": 26,
+      "fase": "Grupos",
+      "fecha": "2026-06-16T14:00:00",
+      "equipoLocal": "Croacia",
+      "equipoVisitante": "Italia",
+      "resultadoReal": null
+    },
+    {
+      "id": 27,
+      "fase": "Grupos",
+      "fecha": "2026-06-17T16:00:00",
+      "equipoLocal": "Países Bajos",
+      "equipoVisitante": "Croacia",
+      "resultadoReal": null
+    },
+    {
+      "id": 28,
+      "fase": "Grupos",
+      "fecha": "2026-06-18T18:00:00",
+      "equipoLocal": "Bélgica",
+      "equipoVisitante": "Italia",
+      "resultadoReal": null
+    },
+    {
+      "id": 29,
+      "fase": "Grupos",
+      "fecha": "2026-06-19T12:00:00",
+      "equipoLocal": "Países Bajos",
+      "equipoVisitante": "Italia",
+      "resultadoReal": null
+    },
+    {
+      "id": 30,
+      "fase": "Grupos",
+      "fecha": "2026-06-20T14:00:00",
+      "equipoLocal": "Bélgica",
+      "equipoVisitante": "Croacia",
+      "resultadoReal": null
+    },
+    {
+      "id": 31,
+      "fase": "Grupos",
+      "fecha": "2026-06-16T12:00:00",
+      "equipoLocal": "Suiza",
+      "equipoVisitante": "Dinamarca",
+      "resultadoReal": null
+    },
+    {
+      "id": 32,
+      "fase": "Grupos",
+      "fecha": "2026-06-17T14:00:00",
+      "equipoLocal": "Polonia",
+      "equipoVisitante": "Serbia",
+      "resultadoReal": null
+    },
+    {
+      "id": 33,
+      "fase": "Grupos",
+      "fecha": "2026-06-18T16:00:00",
+      "equipoLocal": "Suiza",
+      "equipoVisitante": "Polonia",
+      "resultadoReal": null
+    },
+    {
+      "id": 34,
+      "fase": "Grupos",
+      "fecha": "2026-06-19T18:00:00",
+      "equipoLocal": "Dinamarca",
+      "equipoVisitante": "Serbia",
+      "resultadoReal": null
+    },
+    {
+      "id": 35,
+      "fase": "Grupos",
+      "fecha": "2026-06-20T12:00:00",
+      "equipoLocal": "Suiza",
+      "equipoVisitante": "Serbia",
+      "resultadoReal": null
+    },
+    {
+      "id": 36,
+      "fase": "Grupos",
+      "fecha": "2026-06-21T14:00:00",
+      "equipoLocal": "Dinamarca",
+      "equipoVisitante": "Polonia",
+      "resultadoReal": null
+    },
+    {
+      "id": 37,
+      "fase": "Grupos",
+      "fecha": "2026-06-17T12:00:00",
+      "equipoLocal": "Chile",
+      "equipoVisitante": "Ecuador",
+      "resultadoReal": null
+    },
+    {
+      "id": 38,
+      "fase": "Grupos",
+      "fecha": "2026-06-18T14:00:00",
+      "equipoLocal": "Perú",
+      "equipoVisitante": "Costa Rica",
+      "resultadoReal": null
+    },
+    {
+      "id": 39,
+      "fase": "Grupos",
+      "fecha": "2026-06-19T16:00:00",
+      "equipoLocal": "Chile",
+      "equipoVisitante": "Perú",
+      "resultadoReal": null
+    },
+    {
+      "id": 40,
+      "fase": "Grupos",
+      "fecha": "2026-06-20T18:00:00",
+      "equipoLocal": "Ecuador",
+      "equipoVisitante": "Costa Rica",
+      "resultadoReal": null
+    },
+    {
+      "id": 41,
+      "fase": "Grupos",
+      "fecha": "2026-06-21T12:00:00",
+      "equipoLocal": "Chile",
+      "equipoVisitante": "Costa Rica",
+      "resultadoReal": null
+    },
+    {
+      "id": 42,
+      "fase": "Grupos",
+      "fecha": "2026-06-22T14:00:00",
+      "equipoLocal": "Ecuador",
+      "equipoVisitante": "Perú",
+      "resultadoReal": null
+    },
+    {
+      "id": 43,
+      "fase": "Grupos",
+      "fecha": "2026-06-18T12:00:00",
+      "equipoLocal": "Australia",
+      "equipoVisitante": "Ghana",
+      "resultadoReal": null
+    },
+    {
+      "id": 44,
+      "fase": "Grupos",
+      "fecha": "2026-06-19T14:00:00",
+      "equipoLocal": "Nigeria",
+      "equipoVisitante": "Camerún",
+      "resultadoReal": null
+    },
+    {
+      "id": 45,
+      "fase": "Grupos",
+      "fecha": "2026-06-20T16:00:00",
+      "equipoLocal": "Australia",
+      "equipoVisitante": "Nigeria",
+      "resultadoReal": null
+    },
+    {
+      "id": 46,
+      "fase": "Grupos",
+      "fecha": "2026-06-21T18:00:00",
+      "equipoLocal": "Ghana",
+      "equipoVisitante": "Camerún",
+      "resultadoReal": null
+    },
+    {
+      "id": 47,
+      "fase": "Grupos",
+      "fecha": "2026-06-22T12:00:00",
+      "equipoLocal": "Australia",
+      "equipoVisitante": "Camerún",
+      "resultadoReal": null
+    },
+    {
+      "id": 48,
+      "fase": "Grupos",
+      "fecha": "2026-06-11T14:00:00",
+      "equipoLocal": "Ghana",
+      "equipoVisitante": "Nigeria",
+      "resultadoReal": null
+    }
+  ]
+}
