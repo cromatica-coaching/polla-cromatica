@@ -10,6 +10,12 @@ window.PredictionService = (() => {
   const getUserPrediction = (userId, matchId) => getPredictions().find(item => item.userId === userId && String(item.matchId) === String(matchId));
   const getUserChampion = userId => getChampionVotes().find(item => item.userId === userId) || null;
 
+  const confirmBetAcceptance = aceptaApuesta => {
+    if (aceptaApuesta) return true;
+    if (typeof window === 'undefined' || typeof window.confirm !== 'function') return false;
+    return window.confirm('Confirmas que aceptas participar en esta polla con apuesta de $20.000 COP asociada a este marcador?');
+  };
+
   const upsertPrediction = ({ userId, matchId, local, visitante, aceptaApuesta }) => {
     const match = window.MatchService.getById(matchId);
     if (!match) throw new Error('Partido no encontrado.');
@@ -20,7 +26,7 @@ window.PredictionService = (() => {
     if (!Number.isInteger(parsedLocal) || !Number.isInteger(parsedVisitante) || parsedLocal < 0 || parsedVisitante < 0) {
       throw new Error('Ingresa marcadores válidos.');
     }
-    if (!aceptaApuesta) {
+    if (!confirmBetAcceptance(aceptaApuesta)) {
       throw new Error('Debes aceptar la apuesta de $20.000 COP para guardar tu polla.');
     }
 
