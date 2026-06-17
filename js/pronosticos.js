@@ -10,7 +10,7 @@ window.PredictionService = (() => {
   const getUserPrediction = (userId, matchId) => getPredictions().find(item => item.userId === userId && String(item.matchId) === String(matchId));
   const getUserChampion = userId => getChampionVotes().find(item => item.userId === userId) || null;
 
-  const upsertPrediction = ({ userId, matchId, local, visitante }) => {
+  const upsertPrediction = ({ userId, matchId, local, visitante, aceptaApuesta }) => {
     const match = window.MatchService.getById(matchId);
     if (!match) throw new Error('Partido no encontrado.');
     if (window.MatchService.isStarted(match)) throw new Error('El partido ya inició. No puedes modificar este pronóstico.');
@@ -19,6 +19,9 @@ window.PredictionService = (() => {
     const parsedVisitante = Number(visitante);
     if (!Number.isInteger(parsedLocal) || !Number.isInteger(parsedVisitante) || parsedLocal < 0 || parsedVisitante < 0) {
       throw new Error('Ingresa marcadores válidos.');
+    }
+    if (!aceptaApuesta) {
+      throw new Error('Debes aceptar la apuesta de $20.000 COP para guardar tu polla.');
     }
 
     const predictions = getPredictions();
@@ -29,6 +32,8 @@ window.PredictionService = (() => {
       matchId,
       local: parsedLocal,
       visitante: parsedVisitante,
+      aceptaApuesta: true,
+      valorApuestaCOP: 20000,
       updatedAt: new Date().toISOString()
     };
 
