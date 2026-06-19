@@ -3,107 +3,382 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Polla Mundialista</title>
-  <meta name="description" content="Aplicación web para pronósticos mundialistas, ranking y gestión de partidos." />
+  <meta name="description" content="Polla Colombia — Pronostica los partidos de la Selección Colombia y gana el pozo." />
+  <title>Polla Colombia 🇨🇴</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚽</text></svg>" />
 </head>
 <body>
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand__ball">⚽</div>
-      <div>
-        <strong>Polla Mundialista</strong>
-        <span>Predice, compite y celebra</span>
+
+  <!-- ══════════════════════════════════════════════════════════
+       NAVBAR
+  ═══════════════════════════════════════════════════════════ -->
+  <nav class="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="navbar__brand">
+      <span class="navbar__logo" aria-hidden="true">🇨🇴</span>
+      <div class="navbar__title">
+        Polla Colombia
+        <small>Selección Colombia</small>
       </div>
     </div>
-    <nav class="topbar__actions">
-      <button class="btn btn--ghost" id="themeToggle" type="button">🌙 Modo oscuro</button>
-      <button class="btn btn--ghost hidden" id="logoutBtn" type="button">Cerrar sesión</button>
+
+    <nav class="navbar__nav">
+      <a href="#" class="nav-link" data-vista="inicio">⚽ Partidos</a>
+      <a href="#" class="nav-link" data-vista="historial">📋 Historial</a>
+      <a href="#" class="nav-link" data-vista="admin">🔐 Admin</a>
     </nav>
-  </header>
 
-  <main class="layout">
-    <aside class="sidebar hidden" id="sidebar">
-      <button class="nav-link active" data-view="dashboard">Dashboard</button>
-      <button class="nav-link" data-view="partidos">Partidos</button>
-      <button class="nav-link" data-view="pronosticos">Pronósticos</button>
-      <button class="nav-link" data-view="campeon">Campeón</button>
-      <button class="nav-link" data-view="ranking">Ranking</button>
-      <button class="nav-link admin-only" data-view="admin">Administración</button>
-    </aside>
+    <div class="navbar__actions">
+      <button id="btn-modo" title="Cambiar modo oscuro/claro" aria-label="Cambiar tema">🌙</button>
+      <button id="btn-logout" title="Cerrar sesión admin">🚪 Salir</button>
+    </div>
+  </nav>
 
-    <section class="content">
-      <section class="auth-screen" id="authView">
-        <div class="auth-card glass-card">
-          <h1>Bienvenido a la Polla Mundialista</h1>
-          <p>Regístrate o ingresa para empezar a pronosticar los partidos del Mundial.</p>
+  <!-- ══════════════════════════════════════════════════════════
+       CONTENIDO PRINCIPAL
+  ═══════════════════════════════════════════════════════════ -->
+  <main class="main-wrapper" id="main">
 
-          <div class="tabs">
-            <button class="tab active" data-auth-tab="login">Ingresar</button>
-            <button class="tab" data-auth-tab="register">Registrarme</button>
-          </div>
+    <!-- ── Vista: Inicio / Partidos ─────────────────────────── -->
+    <section class="vista" id="vista-inicio" aria-labelledby="titulo-inicio">
 
-          <form id="loginForm" class="form auth-form">
-            <label>Email
-              <input type="email" id="loginEmail" required placeholder="admin@polla.com" />
-            </label>
-            <label>Contraseña
-              <input type="password" id="loginPassword" required placeholder="123456" />
-            </label>
-            <button class="btn btn--primary" type="submit">Iniciar sesión</button>
-            <small>Demo admin: admin@polla.com / 123456</small>
-          </form>
+      <!-- Hero -->
+      <div class="hero-banner">
+        <div class="hero-flag">🇨🇴⚽🏆</div>
+        <h1>Pronostica a la <em>Tricolor</em></h1>
+        <p>Adivina el marcador exacto, acumula el pozo y gana con tus amigos.</p>
+      </div>
 
-          <form id="registerForm" class="form auth-form hidden">
-            <label>Nombre de usuario
-              <input type="text" id="registerName" required minlength="3" placeholder="Tu nombre" />
-            </label>
-            <label>Email
-              <input type="email" id="registerEmail" required placeholder="tu@email.com" />
-            </label>
-            <label>Contraseña
-              <input type="password" id="registerPassword" required minlength="6" placeholder="Mínimo 6 caracteres" />
-            </label>
-            <button class="btn btn--primary" type="submit">Crear cuenta</button>
-          </form>
+      <!-- Dashboard mini -->
+      <div id="dashboard-mini"></div>
+
+      <!-- Toolbar: búsqueda + filtros -->
+      <div class="toolbar" role="toolbar" aria-label="Filtros de partidos">
+        <input
+          type="search"
+          id="busqueda-partido"
+          class="search-input"
+          placeholder="🔍 Buscar rival…"
+          aria-label="Buscar partido por rival"
+        />
+        <div class="filtros" role="group" aria-label="Filtrar por estado">
+          <button class="filtro-btn filtro--active" data-filtro="todos">Todos</button>
+          <button class="filtro-btn" data-filtro="abierto">Abiertos</button>
+          <button class="filtro-btn" data-filtro="cerrado">Cerrados</button>
+          <button class="filtro-btn" data-filtro="finalizado">Finalizados</button>
         </div>
-      </section>
+      </div>
 
-      <section class="app-screen hidden" id="appView">
-        <div class="hero glass-card">
-          <div>
-            <p class="eyebrow">Mundial 2026</p>
-            <h1 id="viewTitle">Dashboard</h1>
-            <p id="welcomeText">Gestiona tus pronósticos y compite por el primer lugar.</p>
-          </div>
-          <div class="hero__badge" id="userBadge">Invitado</div>
-        </div>
+      <!-- Grid de partidos -->
+      <div class="partidos-grid" id="partidos-grid" role="list" aria-label="Partidos disponibles"></div>
 
-        <div id="dashboardView" class="view"></div>
-        <div id="partidosView" class="view hidden"></div>
-        <div id="pronosticosView" class="view hidden"></div>
-        <div id="campeonView" class="view hidden"></div>
-        <div id="rankingView" class="view hidden"></div>
-        <div id="adminView" class="view hidden"></div>
-      </section>
     </section>
+
+    <!-- ── Vista: Historial ──────────────────────────────────── -->
+    <section class="vista" id="vista-historial" aria-labelledby="titulo-historial">
+      <div class="page-header">
+        <h2 id="titulo-historial">📋 Historial de partidos</h2>
+        <p>Resultados oficiales y ganadores de partidos finalizados.</p>
+      </div>
+      <div id="historial-contenido"></div>
+    </section>
+
+    <!-- ── Vista: Admin ──────────────────────────────────────── -->
+    <section class="vista" id="vista-admin" aria-labelledby="titulo-admin">
+      <div class="admin-header">
+        <div class="page-header" style="margin-bottom:0">
+          <h2 id="titulo-admin">🔐 Panel de administración</h2>
+          <p>Gestiona partidos, pronósticos y resultados.</p>
+        </div>
+        <div class="admin-actions-top">
+          <button class="btn btn--gold btn--sm" id="btn-nuevo-partido">＋ Nuevo partido</button>
+          <button class="btn btn--outline btn--sm" id="btn-cambiar-pin">🔑 Cambiar PIN</button>
+        </div>
+      </div>
+      <div id="admin-tabla-contenido"></div>
+    </section>
+
   </main>
 
-  <div class="modal hidden" id="modal">
-    <div class="modal__overlay" data-close-modal></div>
-    <div class="modal__content">
-      <button class="modal__close" type="button" data-close-modal>×</button>
-      <div id="modalBody"></div>
+  <!-- ── Footer ────────────────────────────────────────────── -->
+  <footer class="footer">
+    <p>🇨🇴 Polla Colombia &mdash; Hecho con ❤️ para la hinchada &mdash; <span id="footer-year"></span></p>
+    <p style="margin-top:4px;font-size:0.75rem;opacity:0.6;">PIN por defecto: <strong>1234</strong></p>
+  </footer>
+
+  <!-- ══════════════════════════════════════════════════════════
+       MODALES
+  ═══════════════════════════════════════════════════════════ -->
+
+  <!-- Modal: Login Admin -->
+  <div class="modal" id="modal-admin-login" role="dialog" aria-modal="true" aria-labelledby="login-titulo">
+    <div class="modal__box" style="max-width:380px">
+      <div class="modal__header">
+        <h2 id="login-titulo">Acceso administrador</h2>
+      </div>
+      <div class="modal__body">
+        <div class="login-admin">
+          <span class="login-admin__icon">🔐</span>
+          <h3>Panel de admin</h3>
+          <p>Ingresa el PIN para continuar.</p>
+          <form id="form-admin-login" novalidate>
+            <div class="form-group">
+              <label for="admin-pin">PIN</label>
+              <input
+                type="password"
+                id="admin-pin"
+                class="form-control pin-input"
+                maxlength="8"
+                autocomplete="current-password"
+                inputmode="numeric"
+                placeholder="••••"
+                aria-describedby="admin-pin-error"
+              />
+              <span class="pin-error" id="admin-pin-error" role="alert"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" id="btn-cancelar-login">Cancelar</button>
+        <button class="btn btn--primary" onclick="document.getElementById('form-admin-login').dispatchEvent(new Event('submit'))">Entrar</button>
+      </div>
     </div>
   </div>
 
-  <div class="toast hidden" id="toast"></div>
+  <!-- Modal: Crear / Editar partido -->
+  <div class="modal" id="modal-partido" role="dialog" aria-modal="true" aria-labelledby="modal-partido-titulo">
+    <div class="modal__box">
+      <div class="modal__header">
+        <h2 id="modal-partido-titulo">Nuevo partido</h2>
+        <button class="modal__close" data-modal-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <form id="form-partido" novalidate>
+          <input type="hidden" name="partidoId" />
 
+          <div class="form-group">
+            <label for="partido-rival">Rival <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="partido-rival"
+              name="rival"
+              class="form-control"
+              placeholder="Ej: Brasil, Argentina, Uruguay…"
+              required
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="partido-fecha">Fecha <span aria-hidden="true">*</span></label>
+              <input
+                type="date"
+                id="partido-fecha"
+                name="fecha"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="partido-hora">Hora</label>
+              <input
+                type="time"
+                id="partido-hora"
+                name="hora"
+                class="form-control"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="partido-valor">Valor de participación (COP) <span aria-hidden="true">*</span></label>
+            <input
+              type="number"
+              id="partido-valor"
+              name="valorParticipacion"
+              class="form-control"
+              placeholder="Ej: 10000"
+              min="1"
+              required
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" data-modal-close>Cancelar</button>
+        <button class="btn btn--primary" onclick="document.getElementById('form-partido').dispatchEvent(new Event('submit'))">
+          Guardar partido
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Registrar pronóstico -->
+  <div class="modal" id="modal-pronostico" role="dialog" aria-modal="true" aria-labelledby="modal-pronostico-titulo">
+    <div class="modal__box">
+      <div class="modal__header">
+        <h2 id="modal-pronostico-titulo">Registrar pronóstico</h2>
+        <button class="modal__close" data-modal-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <div class="pronostico-info">
+          <span>📅 <span id="pronostico-info-fecha"></span></span>
+          <span>💰 Participación: <strong id="pronostico-info-valor"></strong></span>
+        </div>
+
+        <form id="form-pronostico" novalidate>
+          <input type="hidden" name="pronostico-partido-id" />
+          <input type="hidden" name="pronostico-id" />
+
+          <div class="form-group">
+            <label for="nombre-participante">Tu nombre <span aria-hidden="true">*</span></label>
+            <input
+              type="text"
+              id="nombre-participante"
+              name="pronostico-nombre"
+              class="form-control"
+              placeholder="Ej: Juan Pérez"
+              required
+              autocomplete="name"
+            />
+          </div>
+
+          <div class="marcador-inputs" role="group" aria-label="Pronóstico del marcador">
+            <div class="marcador-team">
+              <label for="goles-colombia">🇨🇴 Colombia</label>
+              <input
+                type="number"
+                id="goles-colombia"
+                name="goles-colombia"
+                class="marcador-input"
+                min="0"
+                max="20"
+                placeholder="0"
+                required
+              />
+            </div>
+            <div class="marcador-guion" aria-hidden="true">–</div>
+            <div class="marcador-team">
+              <label for="goles-rival" id="pronostico-rival-label">Rival</label>
+              <input
+                type="number"
+                id="goles-rival"
+                name="goles-rival"
+                class="marcador-input"
+                min="0"
+                max="20"
+                placeholder="0"
+                required
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" data-modal-close>Cancelar</button>
+        <button class="btn btn--primary" onclick="document.getElementById('form-pronostico').dispatchEvent(new Event('submit'))">
+          ⚽ Registrar pronóstico
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Registrar resultado (admin) -->
+  <div class="modal" id="modal-registrar-resultado" role="dialog" aria-modal="true" aria-labelledby="registrar-resultado-titulo">
+    <div class="modal__box">
+      <div class="modal__header">
+        <h2 id="registrar-resultado-titulo">Registrar resultado</h2>
+        <button class="modal__close" data-modal-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body">
+        <p style="color:var(--col-muted);margin-bottom:var(--space-5);font-size:0.9rem;">
+          ⚠️ Una vez registrado el resultado, el partido se marcará como <strong>finalizado</strong> y se calcularán los ganadores automáticamente.
+        </p>
+        <form id="form-resultado" novalidate>
+          <input type="hidden" name="resultado-partido-id" />
+          <div class="marcador-inputs" role="group" aria-label="Resultado oficial">
+            <div class="marcador-team">
+              <label for="resultado-colombia">🇨🇴 Colombia</label>
+              <input
+                type="number"
+                id="resultado-colombia"
+                name="resultado-colombia"
+                class="marcador-input"
+                min="0"
+                max="30"
+                placeholder="0"
+                required
+              />
+            </div>
+            <div class="marcador-guion" aria-hidden="true">–</div>
+            <div class="marcador-team">
+              <label for="resultado-rival" id="resultado-rival-label">Rival</label>
+              <input
+                type="number"
+                id="resultado-rival"
+                name="resultado-rival"
+                class="marcador-input"
+                min="0"
+                max="30"
+                placeholder="0"
+                required
+              />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn--outline" data-modal-close>Cancelar</button>
+        <button class="btn btn--primary" onclick="document.getElementById('form-resultado').dispatchEvent(new Event('submit'))">
+          🏁 Confirmar resultado
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Ver resultado (público) -->
+  <div class="modal" id="modal-resultado" role="dialog" aria-modal="true" aria-labelledby="resultado-titulo">
+    <div class="modal__box modal__box--wide">
+      <div class="modal__header">
+        <h2 id="resultado-titulo">Resultado del partido</h2>
+        <button class="modal__close" data-modal-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body" id="resultado-contenido"></div>
+      <div class="modal__footer">
+        <button class="btn btn--primary" data-modal-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Participantes (admin) -->
+  <div class="modal" id="modal-participantes" role="dialog" aria-modal="true" aria-labelledby="participantes-titulo">
+    <div class="modal__box modal__box--wide">
+      <div class="modal__header">
+        <h2 id="participantes-titulo">Participantes</h2>
+        <button class="modal__close" data-modal-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="modal__body" id="participantes-contenido"></div>
+      <div class="modal__footer">
+        <button class="btn btn--primary" data-modal-close>Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SCRIPTS
+  ═══════════════════════════════════════════════════════════ -->
   <script src="js/storage.js"></script>
-  <script src="js/auth.js"></script>
   <script src="js/partidos.js"></script>
   <script src="js/pronosticos.js"></script>
-  <script src="js/ranking.js"></script>
+  <script src="js/resultados.js"></script>
   <script src="js/app.js"></script>
+
+  <script>
+    // Año dinámico en footer
+    document.getElementById('footer-year').textContent = new Date().getFullYear();
+  </script>
+
 </body>
 </html>

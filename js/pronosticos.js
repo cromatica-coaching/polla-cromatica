@@ -1,119 +1,262 @@
-/* PredictionService administra pronósticos de partidos, campeón y estadísticas de aciertos. */
-window.PredictionService = (() => {
-  const { keys, read, write, uid } = window.StorageService;
+/**
+ * pronosticos.js
+ * Módulo de pronósticos de participantes
+ * Polla Colombia
+ */
 
-  const getPredictions = () => read(keys.predictions, []);
-  const savePredictions = predictions => write(keys.predictions, predictions);
-  const getChampionVotes = () => read(keys.championVotes, []);
-  const saveChampionVotes = votes => write(keys.championVotes, votes);
+const Pronosticos = (() => {
+  // ── Abrir modal para pronosticar ──────────────────────────────
 
-  const getUserPrediction = (userId, matchId) => getPredictions().find(item => item.userId === userId && String(item.matchId) === String(matchId));
-  const getUserChampion = userId => getChampionVotes().find(item => item.userId === userId) || null;
-
-  const confirmBetAcceptance = aceptaApuesta => {
-    if (aceptaApuesta) return true;
-    if (typeof window === 'undefined' || typeof window.confirm !== 'function') return false;
-    return window.confirm('Confirmas que aceptas participar en esta polla con apuesta de $20.000 COP asociada a este marcador?');
-  };
-
-  const upsertPrediction = ({ userId, matchId, local, visitante, aceptaApuesta }) => {
-    const match = window.MatchService.getById(matchId);
-    if (!match) throw new Error('Partido no encontrado.');
-    if (window.MatchService.isStarted(match)) throw new Error('El partido ya inició. No puedes modificar este pronóstico.');
-
-    const parsedLocal = Number(local);
-    const parsedVisitante = Number(visitante);
-    if (!Number.isInteger(parsedLocal) || !Number.isInteger(parsedVisitante) || parsedLocal < 0 || parsedVisitante < 0) {
-      throw new Error('Ingresa marcadores válidos.');
-    }
-    if (!confirmBetAcceptance(aceptaApuesta)) {
-      throw new Error('Debes aceptar la apuesta de $20.000 COP para guardar tu polla.');
+  const abrirModal = (partidoId) => {
+    const partido = Storage.getPartido(partidoId);
+    if (!partido || partido.estado !== 'abierto') {
+      alert('Este partido no acepta pronósticos en este momento.');
+      return;
     }
 
-    const predictions = getPredictions();
-    const index = predictions.findIndex(item => item.userId === userId && String(item.matchId) === String(matchId));
-    const payload = {
-      id: index >= 0 ? predictions[index].id : uid('pred'),
-      userId,
-      matchId,
-      local: parsedLocal,
-      visitante: parsedVisitante,
-      aceptaApuesta: true,
-      valorApuestaCOP: 20000,
-      updatedAt: new Date().toISOString()
+    const modal = document.getElementById('modal-pronostico');
+    const form = document.getElementById('form-pronostico');
+    const titulo = document.getElementById('modal-pronostico-titulo');
+    const rival = document.getElementById('pronostico-rival-label');
+
+    titulo.textContent = `Pronóstico · Colombia vs ${partido.rival}`;
+    rival.textContent = partido.rival;
+
+    form.elements['pronostico-nombre'].value = '';
+    form.elements['goles-colombia'].value = '';
+    form.elements['goles-rival'].value = '';
+    form.elements['pronostico-partido-id'].value = partidoId;
+    form.elements['pronostico-id'].value = '';
+
+    // Info del partido
+    document.getElementById('pronostico-info-fecha').textContent =
+      Partidos.formatFecha(partido.fecha) + (partido.hora ? ` · ${partido.hora}` : '');
+    document.getElementById('pronostico-info-valor').textContent =
+      Partidos.formatMoneda(partido.valorParticipacion);
+
+    modal.classList.add('modal--visible');
+    form.elements['pronostico-nombre'].focus();
+  };
+
+  // ── Guardar pronóstico desde formulario ───────────────────────
+
+  const guardarDesdeForm = (form) => {
+    const partidoId = parseInt(form.elements['pronostico-partido-id'].value);
+    const nombre = form.elements['pronostico-nombre'].value.trim();
+    const golesColombia = parseInt(form.elements['goles-colombia'].value);
+    const golesRival = parseInt(form.elements['goles-rival'].value);
+
+    // Validaciones
+    if (!nombre) {
+      mostrarError(form, 'pronostico-nombre', 'El nombre es obligatorio.');
+      return false;
+    }
+    if (isNaN(golesColombia) || golesColombia < 0) {
+      mostrarError(form, 'goles-colombia', 'Ingresa un número válido (≥ 0).');
+      return false;
+    }
+    if (isNaN(golesRival) || golesRival < 0) {
+      mostrarError(form, 'goles-rival', 'Ingresa un número válido (≥ 0).');
+      return false;
+    }
+
+    const partido = Storage.getPartido(partidoId);
+    if (!partido || partido.estado !== 'abierto') {
+      alert('El partido ya no acepta pronósticos.');
+      return false;
+    }
+
+    // Verificar duplicado
+    const existente = Storage.getPronosticoByNombre(partidoId, nombre);
+    if (existente) {
+      if (
+        confirm(
+          `Ya existe un pronóstico de "${nombre}" para este partido.\n¿Deseas modificarlo?`
+        )
+      ) {
+        existente.golesColombia = golesColombia;
+        existente.golesRival = golesRival;
+        Storage.savePronostico(existente);
+        cerrarModal();
+        App.refresh();
+        mostrarToast(`✅ Pronóstico de ${nombre} actualizado.`);
+        return true;
+      }
+      return false;
+    }
+
+    const pronostico = {
+      partidoId,
+      nombre,
+      golesColombia,
+      golesRival,
     };
 
-    if (index >= 0) predictions[index] = payload;
-    else predictions.push(payload);
-    savePredictions(predictions);
-    return payload;
+    Storage.savePronostico(pronostico);
+    cerrarModal();
+    App.refresh();
+    mostrarToast(`✅ Pronóstico registrado para ${nombre}.`);
+    return true;
   };
 
-  const upsertChampion = ({ userId, campeon }) => {
-    if (!campeon) throw new Error('Selecciona un campeón.');
-    const votes = getChampionVotes();
-    const index = votes.findIndex(item => item.userId === userId);
-    const payload = { id: index >= 0 ? votes[index].id : uid('champ'), userId, campeon, updatedAt: new Date().toISOString() };
-    if (index >= 0) votes[index] = payload;
-    else votes.push(payload);
-    saveChampionVotes(votes);
-    return payload;
+  const cerrarModal = () => {
+    document.getElementById('modal-pronostico').classList.remove('modal--visible');
+    limpiarErrores(document.getElementById('form-pronostico'));
   };
 
-  const getWinner = (local, visitante) => {
-    if (local > visitante) return 'local';
-    if (local < visitante) return 'visitante';
-    return 'empate';
+  // ── Modal de participantes (admin) ────────────────────────────
+
+  const mostrarParticipantes = (partidoId) => {
+    const partido = Storage.getPartido(partidoId);
+    if (!partido) return;
+
+    const pronosticos = Storage.getPronosticosByPartido(partidoId);
+    const modal = document.getElementById('modal-participantes');
+    const contenido = document.getElementById('participantes-contenido');
+
+    document.getElementById('participantes-titulo').textContent =
+      `Participantes · Colombia vs ${partido.rival}`;
+
+    if (pronosticos.length === 0) {
+      contenido.innerHTML = `<p class="empty-inline">Aún no hay pronósticos registrados.</p>`;
+    } else {
+      const filas = pronosticos
+        .map(
+          (pr, idx) => `
+          <tr>
+            <td>${idx + 1}</td>
+            <td><strong>${pr.nombre}</strong></td>
+            <td class="pronostico-marcador">🇨🇴 ${pr.golesColombia} – ${pr.golesRival} 🆚</td>
+            <td>${pr.fechaRegistro || '—'}</td>
+            <td>
+              <button class="btn-icon btn-icon--danger" title="Eliminar" 
+                data-action="del-pronostico" data-id="${pr.id}">🗑️</button>
+            </td>
+          </tr>`
+        )
+        .join('');
+
+      contenido.innerHTML = `
+        <div class="participantes-header">
+          <span>Total: <strong>${pronosticos.length}</strong></span>
+          <span>Pozo: <strong>${Partidos.formatMoneda(pronosticos.length * partido.valorParticipacion)}</strong></span>
+          <button class="btn btn--sm btn--outline" id="btn-export-csv" data-partido-id="${partidoId}">
+            ⬇️ Exportar CSV
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table class="tabla-participantes">
+            <thead><tr><th>#</th><th>Nombre</th><th>Pronóstico</th><th>Fecha</th><th></th></tr></thead>
+            <tbody>${filas}</tbody>
+          </table>
+        </div>`;
+
+      // Evento eliminar pronóstico
+      contenido.querySelectorAll('[data-action="del-pronostico"]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const id = parseInt(btn.dataset.id);
+          const pr = Storage.getPronosticos().find((p) => p.id === id);
+          if (pr && confirm(`¿Eliminar el pronóstico de ${pr.nombre}?`)) {
+            Storage.deletePronostico(id);
+            mostrarParticipantes(partidoId); // Refrescar modal
+            App.refresh();
+          }
+        });
+      });
+
+      // Exportar CSV
+      document.getElementById('btn-export-csv').addEventListener('click', () => {
+        exportarCSV(partidoId);
+      });
+    }
+
+    modal.classList.add('modal--visible');
   };
 
-  const pointsForPrediction = (prediction, match) => {
-    if (!prediction || !window.MatchService.isFinished(match)) return 0;
-    const realLocal = Number(match.resultadoReal.local);
-    const realVisitante = Number(match.resultadoReal.visitante);
-    if (prediction.local === realLocal && prediction.visitante === realVisitante) return 5;
-    const predictedWinner = getWinner(prediction.local, prediction.visitante);
-    const realWinner = getWinner(realLocal, realVisitante);
-    return predictedWinner === realWinner ? 3 : 0;
+  const cerrarModalParticipantes = () => {
+    document.getElementById('modal-participantes').classList.remove('modal--visible');
   };
 
-  const championPoints = (userId, realChampion) => {
-    const vote = getUserChampion(userId);
-    return realChampion && vote?.campeon === realChampion ? 10 : 0;
+  // ── Exportar CSV ──────────────────────────────────────────────
+
+  const exportarCSV = (partidoId) => {
+    const partido = Storage.getPartido(partidoId);
+    const pronosticos = Storage.getPronosticosByPartido(partidoId);
+
+    if (pronosticos.length === 0) {
+      alert('No hay participantes para exportar.');
+      return;
+    }
+
+    const encabezados = ['#', 'Nombre', 'Goles Colombia', 'Goles Rival', 'Fecha Registro'];
+    const filas = pronosticos.map((pr, idx) => [
+      idx + 1,
+      pr.nombre,
+      pr.golesColombia,
+      pr.golesRival,
+      pr.fechaRegistro || '',
+    ]);
+
+    const csv = [encabezados, ...filas]
+      .map((row) => row.map((cel) => `"${cel}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `polla-colombia-vs-${partido?.rival || 'partido'}-${Date.now()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    mostrarToast('📥 CSV exportado correctamente.');
   };
 
-  const championMostVoted = () => {
-    const counts = getChampionVotes().reduce((acc, vote) => {
-      acc[vote.campeon] = (acc[vote.campeon] || 0) + 1;
-      return acc;
-    }, {});
-    const sorted = Object.entries(counts).sort((a, b) => b[1] - a[1]);
-    return sorted[0] ? { equipo: sorted[0][0], votos: sorted[0][1] } : null;
+  // ── Helpers de formulario ─────────────────────────────────────
+
+  const mostrarError = (form, campo, msg) => {
+    const input = form.elements[campo];
+    if (!input) return;
+    input.classList.add('input--error');
+    let err = input.parentElement.querySelector('.field-error');
+    if (!err) {
+      err = document.createElement('span');
+      err.className = 'field-error';
+      input.parentElement.appendChild(err);
+    }
+    err.textContent = msg;
+    input.focus();
   };
 
-  const accuracyForUser = userId => {
-    const matches = window.MatchService.getMatches().filter(window.MatchService.isFinished);
-    const predictions = getPredictions().filter(item => item.userId === userId);
-    const evaluated = predictions.filter(pred => matches.some(match => String(match.id) === String(pred.matchId)));
-    const hits = evaluated.filter(pred => pointsForPrediction(pred, window.MatchService.getById(pred.matchId)) > 0).length;
-    return {
-      evaluated: evaluated.length,
-      hits,
-      percentage: evaluated.length ? Math.round((hits / evaluated.length) * 100) : 0
-    };
+  const limpiarErrores = (form) => {
+    if (!form) return;
+    form.querySelectorAll('.input--error').forEach((el) => el.classList.remove('input--error'));
+    form.querySelectorAll('.field-error').forEach((el) => el.remove());
   };
+
+  // ── Toast ─────────────────────────────────────────────────────
+
+  const mostrarToast = (msg) => {
+    let toast = document.getElementById('toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = 'toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('toast--visible');
+    setTimeout(() => toast.classList.remove('toast--visible'), 3000);
+  };
+
+  // ── Export ────────────────────────────────────────────────────
 
   return {
-    getPredictions,
-    savePredictions,
-    getChampionVotes,
-    saveChampionVotes,
-    getUserPrediction,
-    getUserChampion,
-    upsertPrediction,
-    upsertChampion,
-    pointsForPrediction,
-    championPoints,
-    championMostVoted,
-    accuracyForUser
+    abrirModal,
+    guardarDesdeForm,
+    cerrarModal,
+    mostrarParticipantes,
+    cerrarModalParticipantes,
+    exportarCSV,
+    mostrarToast,
+    limpiarErrores,
   };
 })();
